@@ -1,0 +1,23 @@
+{
+  "name": "opal-it-procurement-monitor",
+  "version": "1.0.0",
+  "description": "TenderScan — Centralize and monitor IT tender opportunities across major European portals (Luxembourg PMP, TED, Tendolio, EU Tenders CPV).",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.ts",
+    "dev": "node --watch src/server.ts",
+    "test": "node src/test.ts",
+    "tunnel": "cloudflared tunnel --url http://127.0.0.1:3000"
+  },
+  "keywords": [
+    "IT tenders",
+    "business intelligence",
+    "aggregator",
+    "procurement",
+    "luxembourg",
+    "ted",
+    "tendolio",
+    "cpv"
+  ],
+  "license": "MIT"
+}

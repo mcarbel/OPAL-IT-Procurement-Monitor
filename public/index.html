@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IT Procurement Monitor — TenderScan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            opal: {
+              5: '#00131b',
+              10: '#001f29',
+              20: '#003544',
+              30: '#004d62',
+              40: '#006781',
+              50: '#0082a1',
+              60: '#009dc3',
+              70: '#3bb8e0',
+              80: '#5fd4fd',
+              90: '#b9eaff',
+              95: '#def4ff'
+            },
+            corporate: {
+              navy: '#1e293b',
+              slate: '#f8fafc',
+              electric: '#3b82f6'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .dark body {
+      background-color: #07131a;
+      color: #f1f5f9;
+    }
+    .zebra-row:nth-child(even) {
+      background-color: rgba(241, 245, 249, 0.65);
+    }
+    .dark .zebra-row:nth-child(even) {
+      background-color: rgba(15, 23, 42, 0.45);
+    }
+    .zebra-row:hover {
+      background-color: rgba(59, 130, 246, 0.07) !important;
+    }
+    .dark .zebra-row:hover {
+      background-color: rgba(59, 184, 224, 0.12) !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white transition-colors duration-200">
+
+  <!-- Top Corporate Header -->
+  <header class="bg-[#001f29] text-white border-b border-slate-800 sticky top-0 z-30 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#0082a1] to-[#3b82f6] flex items-center justify-center shadow-md shadow-blue-950/50 ring-1 ring-white/15">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h1 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-white">
+                IT Procurement Monitor
+              </h1>
+              <span class="px-2.5 py-0.5 text-[11px] font-mono font-semibold uppercase tracking-wider rounded-full bg-[#0082a1]/40 text-[#5fd4fd] border border-[#3bb8e0]/30">
+                TenderScan v0.0.1
+              </span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 mt-0.5">
+              Centralize and monitor active IT tender opportunities across Luxembourg &amp; European public procurement portals
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5 self-start md:self-auto">
+          <button id="btnOpalWorkflow" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+            <span class="w-2 h-2 rounded-full bg-[#5fd4fd] animate-pulse"></span>
+            <span>Opal Workflow Output</span>
+          </button>
+          <button id="btnExportCsv" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>Export CSV</span>
+          </button>
+          <button id="btnThemeToggle" type="button" class="p-2 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" title="Toggle Dark/Light Theme">
+            <svg id="iconSun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg id="iconMoon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Search Parameters Panel (Opal Inputs: ask_user_keywords & ask_user_region_filter + CPV) -->
+    <section class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200/90 dark:border-slate-800 p-5 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div>
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-600 dark:text-[#3bb8e0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Search Parameters &amp; CPV Targeting
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Query active IT tenders across Luxembourg PMP, TED Europe, Tendolio IT, and EU Tenders by CPV code
+          </p>
+        </div>
+
+        <!-- Quick Presets -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-[11px] font-medium text-slate-400 mr-1">Quick Presets:</span>
+          <button type="button" data-preset-kw="" data-preset-reg="" class="preset-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition">
+            All IT Tenders
+          </button>
+          <button type="button" data-preset-kw="Cloud Kubernetes" data-preset-reg="Luxembourg" class="preset-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition">
+            Cloud &amp; K8s (LU)
+          </button>
+          <button type="button" data-preset-kw="Cybersecurity SOC NIS2" data-preset-reg="" class="preset-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition">
+            Cybersecurity &amp; SOC
+          </button>
+          <button type="button" data-preset-kw="Java React Software" data-preset-reg="Luxembourg" class="preset-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition">
+            Java / Web Dev
+          </button>
+          <button type="button" data-preset-kw="AI Data Python" data-preset-reg="European Union" class="preset-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition">
+            AI &amp; Data (EU)
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Grid -->
+      <form id="searchForm" class="mt-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+        <!-- Keywords (ask_user_keywords) -->
+        <div class="md:col-span-5">
+          <label for="inputKeywords" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+            Keywords <span class="text-[11px] font-mono text-slate-400 font-normal">(ask_user_keywords)</span>
+          </label>
+          <div class="relative">
+            <input
+              id="inputKeywords"
+              type="text"
+              placeholder="e.g. Cloud, Cybersecurity, Java, AI, SAP, DevOps, Réseau..."
+              class="w-full pl-9 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/80 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition"
+            />
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Region Filter (ask_user_region_filter) -->
+        <div class="md:col-span-3">
+          <label for="inputRegion" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+            Region Filter <span class="text-[11px] font-mono text-slate-400 font-normal">(ask_user_region_filter)</span>
+          </label>
+          <div class="relative">
+            <input
+              id="inputRegion"
+              type="text"
+              list="regionSuggestions"
+              placeholder="e.g. Luxembourg, EU, Belgium, France..."
+              class="w-full pl-9 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/80 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition"
+            />
+            <datalist id="regionSuggestions">
+              <option value="Luxembourg"></option>
+              <option value="European Union (All)"></option>
+              <option value="Belgium / Benelux"></option>
+              <option value="France (Grand Est)"></option>
+              <option value="Germany (Saarland / RLP)"></option>
+            </datalist>
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- CPV Code Filter -->
+        <div class="md:col-span-2">
+          <label for="selectCpv" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+            CPV Division / Code
+          </label>
+          <select
+            id="selectCpv"
+            class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/80 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          >
+            <option value="">All IT CPVs (72 / 48 / 30)</option>
+            <option value="72000000-5">72000000-5 — IT Services</option>
+            <option value="72200000-7">72200000-7 — Software Dev &amp; Consulting</option>
+            <option value="72300000-8">72300000-8 — Data, Cloud &amp; AI</option>
+            <option value="72500000-0">72500000-0 — Managed IT &amp; Infra</option>
+            <option value="72600000-6">72600000-6 — IT Support &amp; Helpdesk</option>
+            <option value="72800000-8">72800000-8 — Cybersecurity &amp; Audit</option>
+            <option value="48000000-8">48000000-8 — Software &amp; ERP Packages</option>
+            <option value="30200000-1">30200000-1 — Computer Hardware &amp; Network</option>
+          </select>
+        </div>
+
+        <!-- Submit & Reset -->
+        <div class="md:col-span-2 flex items-center gap-2">
+          <button
+            type="submit"
+            class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white shadow-sm shadow-blue-600/20 transition cursor-pointer"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span>Scan Portals</span>
+          </button>
+          <button
+            id="btnResetFilters"
+            type="button"
+            title="Reset all filters"
+            class="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- Active Search Metadata Tags / Breadcrumbs (Required by Opal Dashboard Node) -->
+      <div class="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+        <div id="activeParametersBreadcrumbs" class="flex flex-wrap items-center gap-2">
+          <!-- Populated dynamically -->
+        </div>
+        <div id="lastScanTimestamp" class="text-[11px] font-mono text-slate-400">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 Portal Source Cards (Interactive Filter + Live Search Deep Links) -->
+    <section aria-label="Procurement Portals" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="portalCardsContainer">
+      <!-- Populated dynamically by app.js -->
+    </section>
+
+    <!-- Primary Data Table Section -->
+    <section class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200/90 dark:border-slate-800 overflow-hidden">
+      <!-- Table Top Bar -->
+      <div class="px-5 sm:px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+          <h2 class="font-display text-base sm:text-lg font-bold text-[#1e293b] dark:text-white">
+            Aggregated IT Tender Opportunities
+          </h2>
+          <span id="resultsCountBadge" class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">
+            0 tenders
+          </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <label for="sortSelect" class="text-xs font-medium text-slate-500 dark:text-slate-400">Sort by:</label>
+          <select id="sortSelect" class="text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="relevance">Relevance Score</option>
+            <option value="deadline_asc">Deadline (Soonest First)</option>
+            <option value="published_desc">Publication Date (Newest)</option>
+            <option value="source">Portal Source</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Desktop Responsive Data Table -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-800/60 text-[11px] font-bold uppercase tracking-wider text-[#1e293b] dark:text-slate-300">
+              <th class="py-3.5 px-6 w-[44%]">Tender Title &amp; Contracting Authority</th>
+              <th class="py-3.5 px-4 w-[18%]">Source Portal</th>
+              <th class="py-3.5 px-4 w-[15%]">Region</th>
+              <th class="py-3.5 px-4 w-[11%]">Deadline</th>
+              <th class="py-3.5 px-6 text-right w-[12%]">Action / Link</th>
+            </tr>
+          </thead>
+          <tbody id="tendersTableBody" class="divide-y divide-slate-200/70 dark:divide-slate-800 text-sm">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Stacked Card Layout (< md screens) -->
+      <div id="tendersMobileCards" class="md:hidden divide-y divide-slate-200 dark:divide-slate-800">
+        <!-- Populated dynamically -->
+      </div>
+    </section>
+
+    <!-- CPV Quick Reference Drawer / Legend -->
+    <section class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200/90 dark:border-slate-800 p-5 sm:p-6">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h3 class="text-sm font-bold text-[#1e293b] dark:text-white">
+            European IT Procurement CPV Nomenclature (Common Procurement Vocabulary)
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Click any CPV badge below to filter the dashboard by that specific European IT procurement classification
+          </p>
+        </div>
+      </div>
+      <div id="cpvDirectoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 mt-3">
+        <!-- Populated dynamically -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Minimalist Source Attribution Bar (Matching Opal Section 1 Guidelines) -->
+  <aside aria-label="Data Sources Attribution" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="rounded-xl bg-slate-100/80 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 px-5 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600 dark:text-slate-400">
+      <div class="flex items-center gap-2 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Connected Procurement Portals:</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="https://pmp.b2g.etat.lu" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-[#5fd4fd] underline decoration-slate-300 underline-offset-4 transition">
+          Marchés Publics du Luxembourg (pmp.b2g.etat.lu)
+        </a>
+        <span>•</span>
+        <a href="https://ted.europa.eu" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-[#5fd4fd] underline decoration-slate-300 underline-offset-4 transition">
+          TED — Tenders Electronic Daily
+        </a>
+        <span>•</span>
+        <a href="https://www.tendolio.com" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-[#5fd4fd] underline decoration-slate-300 underline-offset-4 transition">
+          Tendolio — Informatique Luxembourg
+        </a>
+        <span>•</span>
+        <a href="https://simap.ted.europa.eu" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-[#5fd4fd] underline decoration-slate-300 underline-offset-4 transition">
+          EU Tenders (CPV 72000000 / 48000000)
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Tender Details Modal -->
+  <div id="tenderDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-xs p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div class="px-6 py-4 bg-[#001f29] text-white flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span id="modalSourceBadge" class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-200 border border-blue-400/30">
+            Source
+          </span>
+          <span id="modalRefNumber" class="font-mono text-xs text-slate-300"></span>
+        </div>
+        <button id="btnCloseDetailModal" type="button" class="text-slate-300 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+        <h3 id="modalTitle" class="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-snug"></h3>
+        <p id="modalBuyer" class="text-sm font-medium text-blue-600 dark:text-[#5fd4fd]"></p>
+        <p id="modalDescription" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200/70 dark:border-slate-800"></p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800">
+            <span class="text-slate-400 block">Region / Country</span>
+            <strong id="modalRegion" class="text-slate-800 dark:text-slate-200 mt-0.5 block"></strong>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800">
+            <span class="text-slate-400 block">Submission Deadline</span>
+            <strong id="modalDeadline" class="text-slate-800 dark:text-slate-200 mt-0.5 block"></strong>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800">
+            <span class="text-slate-400 block">Estimated Value</span>
+            <strong id="modalValue" class="text-slate-800 dark:text-slate-200 mt-0.5 block"></strong>
+          </div>
+        </div>
+
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-1.5">CPV Classifications &amp; Technical Tags</span>
+          <div id="modalTags" class="flex flex-wrap gap-1.5"></div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-end gap-3">
+          <a id="modalPortalSearchLink" href="#" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            Open Portal Advanced Search
+          </a>
+          <a id="modalDirectLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">
+            <span>Open Official Tender Notice on Portal</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opal Workflow & Markdown Report Modal -->
+  <div id="opalWorkflowModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-xs p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 bg-[#001f29] text-white flex items-center justify-between">
+        <div>
+          <h3 class="font-display text-base font-bold">Opal Pipeline — <code class="text-[#5fd4fd] font-mono text-xs">node_step_tender_data_report</code> &rarr; <code class="text-[#5fd4fd] font-mono text-xs">node_step_tender_dashboard</code></h3>
+          <p class="text-xs text-slate-300 mt-0.5">Live Markdown Table output generated from current search parameters</p>
+        </div>
+        <button id="btnCloseOpalModal" type="button" class="text-slate-300 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+        <!-- Pipeline Graph Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+            <div class="font-mono text-[11px] text-blue-600 dark:text-[#5fd4fd] font-semibold">1. User Inputs</div>
+            <div class="font-bold text-slate-800 dark:text-white mt-0.5">Keywords &amp; Region Filter</div>
+            <p class="text-slate-500 dark:text-slate-400 mt-1">Nodes: <code>ask_user_keywords</code>, <code>ask_user_region_filter</code></p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+            <div class="font-mono text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">2. Gather Tender Information</div>
+            <div class="font-bold text-slate-800 dark:text-white mt-0.5">Multi-Portal CPV Aggregator</div>
+            <p class="text-slate-500 dark:text-slate-400 mt-1">Node: <code>node_step_tender_data_report</code></p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
+            <div class="font-mono text-[11px] text-violet-600 dark:text-violet-400 font-semibold">3. Render Dashboard</div>
+            <div class="font-bold text-slate-800 dark:text-white mt-0.5">IT Procurement Monitor UI</div>
+            <p class="text-slate-500 dark:text-slate-400 mt-1">Node: <code>node_step_tender_dashboard</code></p>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Generated Tabular Report (Markdown)</span>
+            <button id="btnCopyMarkdown" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white transition">
+              Copy Markdown Table
+            </button>
+          </div>
+          <pre id="opalMarkdownOutput" class="p-4 rounded-xl bg-slate-950 text-slate-200 font-mono text-xs overflow-x-auto leading-relaxed border border-slate-800"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+{
+  "metadata": {
+    "visual": {
+      "presentation": {
+        "themes": {
+          "62331077-d255-4859-a428-44922ab407fd": {
+            "template": "basic",
+            "templateAdditionalOptions": {},
+            "palette": {
+              "primary": {
+                "0": "#000000",
+                "5": "#00131b",
+                "10": "#001f29",
+                "15": "#002a36",
+                "20": "#003544",
+                "25": "#004153",
+                "30": "#004d62",
+                "35": "#005a71",
+                "40": "#006781",
+                "50": "#0082a1",
+                "60": "#009dc3",
+                "70": "#3bb8e0",
+                "80": "#5fd4fd",
+                "90": "#b9eaff",
+                "95": "#def4ff",
+                "98": "#f3faff",
+                "99": "#fafdff",
+                "100": "#ffffff"
+              },
+              "secondary": {
+                "0": "#000000",
+                "5": "#00131b",
+                "10": "#071e26",
+                "15": "#132931",
+                "20": "#1e333c",
+                "25": "#293e47",
+                "30": "#354a53",
+                "35": "#40565f",
+                "40": "#4c626b",
+                "50": "#657a84",
+                "60": "#7e949e",
+                "70": "#98afb9",
+                "80": "#b3cad5",
+                "90": "#cfe6f1",
+                "95": "#def4ff",
+                "98": "#f3faff",
+                "99": "#fafdff",
+                "100": "#ffffff"
+              },
+              "tertiary": "",
+              "error": {
+                "0": "#000000",
+                "5": "#2d0001",
+                "10": "#410002",
+                "15": "#540003",
+                "20": "#690005",
+                "25": "#7e0007",
+                "30": "#93000a",
+                "35": "#a80710",
+                "40": "#ba1a1a",
+                "50": "#de3730",
+                "60": "#ff5449",
+                "70": "#ff897d",
+                "80": "#ffb4ab",
+                "90": "#ffdad6",
+                "95": "#ffedea",
+                "98": "#fff8f7",
+                "99": "#fffbff",
+                "100": "#ffffff"
+              },
+              "neutral": {
+                "0": "#000000",
+                "5": "#0e1113",
+                "10": "#191c1d",
+                "15": "#232628",
+                "20": "#2e3132",
+                "25": "#393c3d",
+                "30": "#444749",
+                "35": "#505354",
+                "40": "#5c5f60",
+                "50": "#757779",
+                "60": "#8f9193",
+                "70": "#a9abad",
+                "80": "#c5c7c8",
+                "90": "#e1e3e4",
+                "95": "#eff1f2",
+                "98": "#f8f9fb",
+                "99": "#fbfcfe",
+                "100": "#ffffff"
+              },
+              "neutralVariant": {
+                "0": "#000000",
+                "5": "#0a1215",
+                "10": "#151d20",
+                "15": "#1f272a",
+                "20": "#2a3235",
+                "25": "#353d40",
+                "30": "#40484c",
+                "35": "#4c5458",
+                "40": "#576064",
+                "50": "#70787c",
+                "60": "#8a9296",
+                "70": "#a4acb1",
+                "80": "#c0c8cc",
+                "90": "#dce4e8",
+                "95": "#eaf2f7",
+                "98": "#f3faff",
+                "99": "#fafdff",
+                "100": "#ffffff"
+              }
+            },
+            "themeColors": {
+              "primaryColor": "",
+              "secondaryColor": "",
+              "backgroundColor": "",
+              "primaryTextColor": "",
+              "textColor": ""
+            },
+            "splashScreen": {
+              "storedData": {
+                "handle": "drive:/1BY8sLyjpbEOAgI_VJyYVfHjacQqSOA9u",
+                "mimeType": "image/png",
+                "contentLength": 1718456
+              }
+            }
+          }
+        },
+        "theme": "62331077-d255-4859-a428-44922ab407fd"
+      }
+    },
+    "intent": "Create an application that gather tenders from : \nconsulter tous les appels d’offres IT ?\n- Marchés publics du Luxembourg — portail officiel national.\n- TED — Tenders Electronic Daily — marchés publics européens.\n- Tendolio — Informatique Luxembourg — sélection sectorielle.\n- EU Tenders — Services informatiques — appels d’offres par code CPV.",
+    "revision_intents": [],
+    "raw_intent": "Create an application that gather tenders from : \nconsulter tous les appels d’offres IT ?\n- Marchés publics du Luxembourg — portail officiel national.\n- TED — Tenders Electronic Daily — marchés publics européens.\n- Tendolio — Informatique Luxembourg — sélection sectorielle.\n- EU Tenders — Services informatiques — appels d’offres par code CPV.",
+    "tags": [
+      "IT tenders",
+      "business intelligence",
+      "aggregator",
+      "procurement"
+    ],
+    "parameters": {}
+  },
+  "assets": {},
+  "title": "TenderScan",
+  "description": "Centralize and monitor your IT tender opportunities across major European portals.",
+  "version": "0.0.1",
+  "nodes": [
+    {
+      "id": "node_step_tender_data_report",
+      "metadata": {
+        "title": "Gather Tender Information",
+        "visual": {
+          "x": 700,
+          "y": 350,
+          "collapsed": "expanded",
+          "outputHeight": 88
+        },
+        "step_intent": "Perform a targeted search across four specific portals: Luxembourg's national procurement portal, TED (Tenders Electronic Daily), Tendolio, and EU Tenders using CPV codes. Incorporate the user-provided 'keywords' and 'region_filter' into the search queries to find relevant, active IT tenders. Compile the results into a clear, tabular format containing columns for 'Tender Title', 'Source', 'Region', and 'Link' (if available)."
+      },
+      "type": "embed://a2/generate.bgl.json#module:main",
+      "configuration": {
+        "config$prompt": {
+          "parts": [
+            {
+              "text": "1. Objective:\nSearch for active IT tenders across Luxembourg's national procurement portal, TED (Tenders Electronic Daily), Tendolio, and EU Tenders. Use relevant IT-related CPV codes along with the provided keywords and region filter to identify targeted opportunities.\n\n2. Output Format:\nProvide a table containing the following columns: Tender Title, Source, Region, and Link. Ensure the information is current and the links are provided where available. You are done when the table is complete and you have signaled completion using system_objective_fulfilled.\n\n3. User Input / Context:\nKeywords: {{\"type\":\"in\",\"path\":\"ask_user_keywords\",\"title\":\"Keywords\"}}\nRegion Filter: {{\"type\":\"in\",\"path\":\"ask_user_region_filter\",\"title\":\"Region Filter\"}}"
+            }
+          ],
+          "role": "user"
+        },
+        "generation-mode": "agent"
+      }
+    },
+    {
+      "id": "node_step_tender_dashboard",
+      "metadata": {
+        "title": "Generate Tender Dashboard",
+        "visual": {
+          "x": 1050,
+          "y": 350,
+          "collapsed": "expanded",
+          "outputHeight": 88
+        },
+        "step_intent": "Take the aggregated tender report and render it as a clean, responsive HTML table. Include the original search criteria as a header for reference. Style the dashboard to be professional and easy to scan."
+      },
+      "type": "embed://a2/a2.bgl.json#module:render-outputs",
+      "configuration": {
+        "text": {
+          "parts": [
+            {
+              "text": "Create a professional, high-density IT Tender Dashboard designed for clarity and efficient data scanning. The goal is to present aggregated procurement data in a \"Premium Corporate Tech\" aesthetic that feels both trustworthy and modern.\n\n1. Layout Organization:\n- Header Section: A clean, structured top area containing the page title \"IT Procurement Monitor\". Below the title, include a \"Search Parameters\" panel that displays the search criteria (keywords, region filters, and CPV codes) as discrete, styled metadata tags or breadcrumbs.\n- Main Content: A centered, full-width responsive container housing the primary data table. \n- Table Structure: Organize columns with a clear hierarchy: \n    * 'Tender Title' as the prominent primary column.\n    * 'Source' and 'Region' as secondary descriptors.\n    * 'Action/Link' as the final column.\n- Footer: A minimalist footer providing attribution to the sources (Luxembourg Portal, TED, Tendolio, EU Tenders).\n\n2. Style Design Language:\n- Aesthetic Goal: Professional, technical, and clean. The design should avoid clutter and focus on readability.\n- Color Palette: Use a \"Modern Business\" scheme. Deep slate or navy blue (#1e293b) for primary headings, off-white/light gray (#f8fafc) for the background to reduce eye strain, and a vibrant primary accent like Electric Blue (#3b82f6) for interactive elements and links.\n- Typography: Use a highly legible sans-serif typeface (such as Inter, Roboto, or System-UI). Use bold weights for headers and medium weights for table data to create a clear visual hierarchy.\n- Spacing: Implement a \"comfortable\" information density. Use generous padding within table cells (at least 12px-16px) and ample white space between the search summary and the data grid.\n\n3. Component Guidelines:\n- Data Table: Use a modern grid style with subtle horizontal dividers rather than heavy borders. Incorporate a subtle zebra-striping effect (alternating row colors) and a distinct highlight color when hovering over a row to aid tracking.\n- Source Badges: Represent the 'Source' column using color-coded pill labels (badges). Each source (e.g., TED, Tendolio) should have a unique, muted background color to allow for instant visual categorization.\n- Call-to-Action: Convert links into \"View Details\" buttons or high-contrast icons to provide a polished, application-like feel rather than a raw text document.\n- Responsive Design: The table must support horizontal scrolling on mobile devices or transform into a stacked card layout to ensure data remains accessible on all screen sizes.\n\ntender_data_report: {{\"type\":\"in\",\"path\":\"node_step_tender_data_report\",\"title\":\"Gather Tender Information\"}}\n\nkeywords: {{\"type\":\"in\",\"path\":\"ask_user_keywords\",\"title\":\"Keywords\"}}\n\nregion_filter: {{\"type\":\"in\",\"path\":\"ask_user_region_filter\",\"title\":\"Region Filter\"}}"
+            }
+          ],
+          "role": "user"
+        },
+        "b-system-instruction": {
+          "parts": [
+            {
+              "text": "You are an AI Web Developer. Your task is to generate a single, self-contained HTML document for rendering in an iframe, based on user instructions and data."
+            }
+          ],
+          "role": "user"
+        },
+        "p-render-mode": "Auto",
+        "b-render-model-name": "gemini-flash"
+      }
+    },
+    {
+      "id": "ask_user_keywords",
+      "metadata": {
+        "title": "Keywords",
+        "visual": {
+          "x": 250,
+          "y": 300,
+          "collapsed": "expanded",
+          "outputHeight": 88
+        }
+      },
+      "type": "embed://a2/a2.bgl.json#21ee02e7-83fa-49d0-964c-0cab10eafc2c",
+      "configuration": {
+        "description": {
+          "parts": [
+            {
+              "text": "Enter specific IT technologies or project keywords"
+            }
+          ],
+          "role": "user"
+        },
+        "p-modality": "Any"
+      }
+    },
+    {
+      "id": "ask_user_region_filter",
+      "metadata": {
+        "title": "Region Filter",
+        "visual": {
+          "x": 250,
+          "y": 450,
+          "collapsed": "expanded",
+          "outputHeight": 88
+        }
+      },
+      "type": "embed://a2/a2.bgl.json#21ee02e7-83fa-49d0-964c-0cab10eafc2c",
+      "configuration": {
+        "description": {
+          "parts": [
+            {
+              "text": "Specify the geographic region or country desired"
+            }
+          ],
+          "role": "user"
+        },
+        "p-modality": "Any"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "ask_user_keywords",
+      "to": "node_step_tender_data_report",
+      "out": "context",
+      "in": "p-z-ask_user_keywords"
+    },
+    {
+      "from": "ask_user_keywords",
+      "to": "node_step_tender_dashboard",
+      "out": "context",
+      "in": "p-z-ask_user_keywords"
+    },
+    {
+      "from": "ask_user_region_filter",
+      "to": "node_step_tender_data_report",
+      "out": "context",
+      "in": "p-z-ask_user_region_filter"
+    },
+    {
+      "from": "ask_user_region_filter",
+      "to": "node_step_tender_dashboard",
+      "out": "context",
+      "in": "p-z-ask_user_region_filter"
+    },
+    {
+      "from": "node_step_tender_data_report",
+      "to": "node_step_tender_dashboard",
+      "out": "context",
+      "in": "p-z-node_step_tender_data_report"
+    }
+  ],
+  "url": "drive:/1Oi2GFWuoioXDD5syr-lySfTyfMsRbxd8"
+}
